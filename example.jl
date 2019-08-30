@@ -23,7 +23,4 @@ end
 g = generate_bipartite_graph()
 opt = with_optimizer(GLPK.Optimizer)
 vis = BipartiteLayout.bipartite_layout(g, opt)
-println(vis)
-draw(SVG("res/g.svg", 16cm, max(na, nb)*1cm), vis)
-vis = BipartiteLayout.bipartite_layout_random(g)
-draw(SVG("res/g_rand.svg", 16cm, max(na, nb)*1cm), vis)
+draw(SVG("res/g.svg", 16cm, max(na, nb) * 1cm), vis)
