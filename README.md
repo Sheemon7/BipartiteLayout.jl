@@ -45,17 +45,20 @@ draw(SVG("res/g.svg", 16cm, max(na, nb)*1cm), vis)
 
 # Examples
 
-### Optimized
+### Graph #1
+#### Optimized
 ![Screenshot](res/ex1.svg)
-### Random
+#### Random
 ![Screenshot](res/ex1_rand.svg)
 
-### Optimized
+### Graph #2
+#### Optimized
 ![Screenshot](res/ex2.svg)
-### Random
+#### Random
 ![Screenshot](res/ex2_rand.svg)
 
-### Optimized
+### Graph #3
+#### Optimized
 ![Screenshot](res/ex3.svg)
-### Random
+#### Random
 ![Screenshot](res/ex3_rand.svg)
