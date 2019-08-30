@@ -1,11 +1,11 @@
-module BipartiteGraphVis
+module BipartiteLayout
 
-using JuMP, GLPK
+using JuMP
 using LightGraphs
-using GraphPlot, Colors, Compose, Cairo, Fontconfig
-using Random, Distributions
+using GraphPlot, Colors
+using Random
 
-function solve_bipartite_layout(g, bm, a, b, na, nb)
+function solve_bipartite_layout(g, opt, bm, a, b, na, nb)
     ia, ib = Dict(v => i for (i,v) in enumerate(a)), Dict(v => i for (i,v) in enumerate(b))
     m = Model()
 
@@ -30,7 +30,7 @@ function solve_bipartite_layout(g, bm, a, b, na, nb)
     @objective(m, Min, sum(Z))
 
     # print(m)
-    optimize!(m, with_optimizer(GLPK.Optimizer))
+    optimize!(m, opt)
     println("Objective value: ", objective_value(m))
 
     locs_y = [bm[v] == 1 ? -1.0 : 1.0 for v in 1:nv(g)]
@@ -47,18 +47,18 @@ function solve_bipartite_layout(g, bm, a, b, na, nb)
     locs_x, locs_y
 end
 
-function gplot_bipartite(g)
+function bipartite_layout(g, opt)
     bm = bipartite_map(g)
     a, b = findall(bm .== 1), findall(bm .== 2)
     na, nb = length(a), length(b)
-    locs_x, locs_y = solve_bipartite_layout(g, bm, a, b, na, nb)
+    locs_x, locs_y = solve_bipartite_layout(g, opt, bm, a, b, na, nb)
     nodelabel = 1:nv(g)
     cs = [colorant"lightseagreen", colorant"orange"]
     nodefillc = cs[[bm[v] for v in 1:nv(g)]]
     gplot(g, locs_x, locs_y, nodelabel=nodelabel, nodefillc=nodefillc)
 end
 
-function gplot_bipartite_random(g)
+function bipartite_layout_random(g)
     bm = bipartite_map(g)
     a, b = findall(bm .== 1), findall(bm .== 2)
     na, nb = length(a), length(b)
@@ -78,30 +78,6 @@ function gplot_bipartite_random(g)
     gplot(g, locs_x, locs_y, nodelabel=nodelabel, nodefillc=nodefillc)
 end
 
-function main()
-    function generate_bipartite_graph(; na=10, nb=5, p=0.1)
-        d = Geometric(p)
-        g = SimpleGraph()
-        for _ in 1:(na+nb)
-            add_vertex!(g)
-        end
-        ns = min.(nb, rand(d, na))
-        for (a,n) in enumerate(ns)
-            for b in sample(1:nb, n)
-                add_edge!(g, a, na+b)
-            end
-        end
-        g
-    end
-
-    na, nb = 7, 8
-    g = generate_bipartite_graph(na=na, nb=nb)
-    vis = BipartiteGraphVis.gplot_bipartite(g)
-    draw(PDF("g.pdf", 16cm, max(na, nb)*1cm), vis)
-    vis = BipartiteGraphVis.gplot_bipartite_random(g)
-    draw(PDF("g_rand.pdf", 16cm, max(na, nb)*1cm), vis)
-end
-
-export gplot_bipartite
+export bipartite_layout
 
 end
