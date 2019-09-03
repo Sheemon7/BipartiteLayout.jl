@@ -42,7 +42,7 @@ Define an optimizer (GLPK in this case), optimize layout and save the result
 ```julia
 opt = with_optimizer(GLPK.Optimizer)
 vis = BipartiteLayout.bipartite_layout(g, opt)
-draw(SVG("res/g.svg", 16cm, max(na, nb)*1cm), vis)
+draw(SVG("res/g.svg", max(na, nb)*1cm), 16cm, vis)
 ```
 
 # Examples
